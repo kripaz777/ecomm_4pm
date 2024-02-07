@@ -124,13 +124,16 @@
         <div class="footer">
             <div class="container-fluid">
                 <div class="row">
+
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-widget">
                             <h2>Get in Touch</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>123 E Store, Los Angeles, USA</p>
-                                <p><i class="fa fa-envelope"></i>email@example.com</p>
-                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                                {% for contact in contacts %}
+                                <p><i class="fa fa-map-marker"></i>{{contact.address}}</p>
+                                <p><i class="fa fa-envelope"></i>{{contact.email}}</p>
+                                <p><i class="fa fa-phone"></i>{{contact.phone}}</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -140,11 +143,13 @@
                             <h2>Follow Us</h2>
                             <div class="contact-info">
                                 <div class="social">
-                                    <a href=""><i class="fab fa-twitter"></i></a>
-                                    <a href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
-                                    <a href=""><i class="fab fa-instagram"></i></a>
-                                    <a href=""><i class="fab fa-youtube"></i></a>
+                                    {% for contact in contacts %}
+                                    <a href="{{contact.twitter}}"><i class="fab fa-twitter"></i></a>
+                                    <a href="{{contact.facebook}}"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="{{contact.linkedin}}"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="{{contact.insta}}"><i class="fab fa-instagram"></i></a>
+                                    <a href="{{contact.youtube}}"><i class="fab fa-youtube"></i></a>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
