@@ -20,7 +20,7 @@ class Ad(models.Model):
     name = models.CharField(max_length=300)
     image = models.ImageField(upload_to='media')
     description = models.TextField(blank=True)
-    renk = models.IntegerField()
+    rank = models.IntegerField()
 
     def __str__(self):
         return self.name
