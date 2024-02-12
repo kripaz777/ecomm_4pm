@@ -33,6 +33,8 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+LABELS = (('new','new'),('hot','hot'),('sale','sale'),('','default'))
+STOCK = (('In Stock','In Stock'),('Out of Stock','Out of Stock'))
 class Product(models.Model):
     name = models.CharField(max_length=500)
     iamge = models.ImageField(upload_to='media')
@@ -43,6 +45,8 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     specification = models.TextField(blank=True)
+    label = models.CharField(choices=LABELS,blank = True, max_length=25)
+    stock = models.CharField(choices=STOCK,blank = True,max_length=25)
     def __str__(self):
         return self.name
 
