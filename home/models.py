@@ -72,5 +72,16 @@ class ContactInfo(models.Model):
     def __str__(self):
         return self.address
 
+class Cart(models.Model):
+    username = models.CharField(max_length=300)
+    slug = models.CharField(max_length=500)
+    item = models.ForeignKey(Product,on_delete=models.CASCADE)
+    quantity = models.FloatField(default = 1)
+    checkout = models.BooleanField(default = False)
+    total = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username
 
 

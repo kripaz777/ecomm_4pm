@@ -63,5 +63,44 @@ def signup(request):
                 ).save()
         else:
             messages.error(request, "Password does not match!")
-            return redirect('/sighup')
+            return redirect('/signup')
     return render(request,'signup.html')
+
+def add_to_cart(request,slug):
+    username = request.user.username
+    if Cart.objects.filter(username = username, slug = slug,checkout = False).exists():
+        quantity = Cart.objects.get(username=username, slug=slug, checkout=False).quantity
+        quantity = quantity + 1
+        price = Product.objects.get(slug = slug).price
+        discounted_price = Product.objects.get(slug = slug).discounted_price
+        if discounted_price > 0:
+            original_price = discounted_price
+            total = original_price * quantity
+        else:
+            original_price = price
+            total = original_price * quantity
+
+        Cart.objects.filter(username=username, slug=slug, checkout=False).update(
+            quantity = quantity,
+            total = total
+        )
+    else:
+        price = Product.objects.get(slug=slug).price
+        discounted_price = Product.objects.get(slug=slug).discounted_price
+        if discounted_price > 0:
+            original_price = discounted_price
+        else:
+            original_price = price
+        Cart.objects.create(
+            username = username,
+            slug = slug,
+            total = original_price,
+            item = Product.objects.filter(slug = slug)[0]
+        ).save()
+    return redirect('/')
+
+class CartView(BaseView):
+    def get(self,request):
+        username = request.user.username
+        self.views['cart_product'] = Cart.objects.filter(username = username,checkout = False)
+        return render(request,'cart.html',self.views)
