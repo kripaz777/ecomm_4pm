@@ -97,7 +97,29 @@ def add_to_cart(request,slug):
             total = original_price,
             item = Product.objects.filter(slug = slug)[0]
         ).save()
-    return redirect('/')
+    return redirect('/my_cart')
+
+def reduce_cart(request,slug):
+    username = request.user.username
+    if Cart.objects.filter(username = username, slug = slug,checkout = False).exists():
+        quantity = Cart.objects.get(username=username, slug=slug, checkout=False).quantity
+        if quantity > 1:
+            quantity = quantity - 1
+            price = Product.objects.get(slug = slug).price
+            discounted_price = Product.objects.get(slug = slug).discounted_price
+            if discounted_price > 0:
+                original_price = discounted_price
+                total = original_price * quantity
+            else:
+                original_price = price
+                total = original_price * quantity
+
+            Cart.objects.filter(username=username, slug=slug, checkout=False).update(
+                quantity = quantity,
+                total = total
+            )
+    return redirect('/my_cart')
+
 
 class CartView(BaseView):
     def get(self,request):

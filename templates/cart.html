@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
         <!-- Breadcrumb Start -->
-        <div class="breadcrumb-wrap">
+<div class="breadcrumb-wrap" xmlns="http://www.w3.org/1999/html">
             <div class="container-fluid">
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -39,16 +39,16 @@
                                                     <p>{{cart.item.name}}</p>
                                                 </div>
                                             </td>
-                                            {% if cart.item.disconted_price > 0 %}
-                                            <td>${{cart.item.disconted_price}}</td>
+                                            {% if cart.item.discounted_price > 0 %}
+                                            <td>${{cart.item.discounted_price}}</td>
                                             {% else %}
                                             <td>${{cart.item.price}}</td>
                                             {% endif %}
                                             <td>
                                                 <div class="qty">
-                                                    <button class="btn-minus"><i class="fa fa-minus"></i></button>
+                                                    <button class="btn-minus"><a href = "/reduce_cart/{{cart.slug}}<i class="fa fa-minus"></i></a></button>
                                                     <input type="text" value="{{cart.quantity}}">
-                                                    <button class="btn-plus"><i class="fa fa-plus"></i></button>
+                                                    <button class="btn-plus"><a href = "/add_to_cart/{{cart.slug}}"><i class="fa fa-plus"></i></a></button>
                                                 </div>
                                             </td>
                                             <td>${{cart.total}}</td>
