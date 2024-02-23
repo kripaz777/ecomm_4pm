@@ -13,6 +13,11 @@ class BaseView(View):
 class HomeView(BaseView):
     def get(self,request):
         self.views
+        try:
+            username = request.user.username
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+        except:
+            pass
         self.views['sliders'] = Slider.objects.all()
         self.views['ads'] = Ad.objects.all()
         self.views['products'] = Product.objects.all()
@@ -25,6 +30,11 @@ class HomeView(BaseView):
 class CategoryView(BaseView):
     def get(self,request,slug):
         self.views
+        try:
+            username = request.user.username
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+        except:
+            pass
         cat_id = Category.objects.get(slug = slug).id
         self.views['cat_product'] = Product.objects.filter(category_id = cat_id)
         return render(request,'category.html',self.views)
@@ -33,6 +43,11 @@ class CategoryView(BaseView):
 class BrandView(BaseView):
     def get(self,request,slug):
         self.views
+        try:
+            username = request.user.username
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+        except:
+            pass
         b_id = Brand.objects.get(slug = slug).id
         self.views['brand_product'] = Product.objects.filter(brand_id = b_id)
         return render(request,'brand.html',self.views)
@@ -120,9 +135,25 @@ def reduce_cart(request,slug):
             )
     return redirect('/my_cart')
 
+def delete_cart(request,slug):
+    username = request.user.username
+    if Cart.objects.filter(username=username, slug=slug, checkout=False).exists():
+        Cart.objects.filter(username=username, slug=slug, checkout=False).delete()
 
+    return redirect('/my_cart')
 class CartView(BaseView):
     def get(self,request):
-        username = request.user.username
-        self.views['cart_product'] = Cart.objects.filter(username = username,checkout = False)
+        try:
+            username = request.user.username
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+        except:
+            pass
+        carts = Cart.objects.filter(username = username,checkout = False)
+        self.views['cart_product'] = carts
+        all_total = 0
+        for i in carts:
+            all_total = all_total + i.total
+        self.views['all_total'] = all_total
+        # self.views['delivery'] = 50
+        self.views['grand_total'] = all_total + 50
         return render(request,'cart.html',self.views)
