@@ -5,6 +5,7 @@ urlpatterns = [
     path("",HomeView.as_view(),name = "home"),
     path("category/<slug>", CategoryView.as_view(), name="category"),
     path("brand/<slug>", BrandView.as_view(), name="brand"),
+    path("search", SearchView.as_view(), name="search"),
     path("signup", signup, name="signup"),
     path("add_to_cart/<slug>", add_to_cart, name="add_to_cart"),
     path("reduce_cart/<slug>", reduce_cart, name="reduce_cart"),

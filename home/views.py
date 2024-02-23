@@ -15,7 +15,7 @@ class HomeView(BaseView):
         self.views
         try:
             username = request.user.username
-            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
         except:
             pass
         self.views['sliders'] = Slider.objects.all()
@@ -32,7 +32,7 @@ class CategoryView(BaseView):
         self.views
         try:
             username = request.user.username
-            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
         except:
             pass
         cat_id = Category.objects.get(slug = slug).id
@@ -45,14 +45,20 @@ class BrandView(BaseView):
         self.views
         try:
             username = request.user.username
-            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
         except:
             pass
         b_id = Brand.objects.get(slug = slug).id
         self.views['brand_product'] = Product.objects.filter(brand_id = b_id)
         return render(request,'brand.html',self.views)
 
-
+class SearchView(BaseView):
+    def get(self,request):
+        if request.method == 'GET':
+            query = request.GET['query']
+            if query != "":
+                self.views['search_product'] = Product.objects.filter(name__icontains = query)
+        return render(request,'search.html',self.views)
 def signup(request):
     if request.method == 'POST':
         fname = request.POST['first_name']
@@ -145,7 +151,7 @@ class CartView(BaseView):
     def get(self,request):
         try:
             username = request.user.username
-            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False)
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
         except:
             pass
         carts = Cart.objects.filter(username = username,checkout = False)
