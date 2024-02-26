@@ -26,6 +26,16 @@ class HomeView(BaseView):
         self.views['sales'] = Product.objects.filter(label = 'sale')
         return render(request,'index.html',self.views)
 
+class ProductView(BaseView):
+    def get(self,request,slug):
+        self.views
+        self.views['detail_product'] = Product.objects.filter(slug = slug)
+        try:
+            username = request.user.username
+            self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
+        except:
+            pass
+        return render(request,'product-detail.html',self.views)
 
 class CategoryView(BaseView):
     def get(self,request,slug):
