@@ -30,6 +30,9 @@ class ProductView(BaseView):
     def get(self,request,slug):
         self.views
         self.views['detail_product'] = Product.objects.filter(slug = slug)
+        cat_id = Product.objects.get(slug = slug).category
+        self.views['related_product'] = Product.objects.filter(category_id = cat_id)
+
         try:
             username = request.user.username
             self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
