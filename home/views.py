@@ -32,7 +32,7 @@ class ProductView(BaseView):
         self.views['detail_product'] = Product.objects.filter(slug = slug)
         cat_id = Product.objects.get(slug = slug).category
         self.views['related_product'] = Product.objects.filter(category_id = cat_id)
-
+        self.views['product_reviews'] = ProductReview.objects.filter(slug = slug)
         try:
             username = request.user.username
             self.views['count_cart'] = Cart.objects.filter(username=username, checkout=False).count()
@@ -176,3 +176,42 @@ class CartView(BaseView):
         # self.views['delivery'] = 50
         self.views['grand_total'] = all_total + 50
         return render(request,'cart.html',self.views)
+
+from django.core.mail import send_mail
+def contact(request):
+    if request.Method == "POST":
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+        Contact.objects.create(
+            name = name,
+            email = email,
+            subject = subject,
+            message = message
+        ).save()
+        send_mail(
+            "Form submitted",
+            f"Hello {name} having email {email}. I am very glad to say that your query will be replayed soon.",
+            "from@example.com",
+            [email],
+            fail_silently=False,
+        )
+    return render(request,'contact.html')
+
+
+def product_review(request,slug):
+    if Product.objects.filter(slug = slug):
+        if request.method == 'POST':
+            username = request.user.username
+            star = request.POST['star']
+            comment = request.POST['comment']
+            ProductReview.objects.create(
+                username = username,
+                slug = slug,
+                star = star,
+                comment = comment
+            ).save()
+    else:
+        return redirect(f'/product/{slug}')
+    return redirect(f'/product/{slug}')

@@ -42,7 +42,7 @@ class ProductDetail(APIView):
 
     def put(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = ProductSerializer(snippet, data=request.data)
+        serializer = ProductSerializer(snippet, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

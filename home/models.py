@@ -85,3 +85,22 @@ class Cart(models.Model):
         return self.username
 
 
+class Contact(models.Model):
+    name = models.CharField(max_length=500)
+    email = models.EmailField(max_length=100)
+    subject = models.CharField(max_length=500)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.username
+
+class ProductReview(models.Model):
+    username = models.CharField(max_length=500)
+    comment = models.TextField()
+    star = models.IntegerField(default = 5)
+    slug = models.CharField(max_length=500)
+    date = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.username
